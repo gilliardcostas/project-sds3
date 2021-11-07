@@ -26,9 +26,7 @@ const DonutChart = () => {
 
     /* UMA FORMA DE FAZER O PROCESSO
     let chartData : ChartData = { labels: [], series: []}
-    
-
-       UMA FORMA DE FAZER O PROCESSO
+        
     axios.get(`${BASE_URL}/vendas/quantia-por-vendedor`)
         .then(response => {
             const data = response.data as SomaVendas[];
@@ -40,7 +38,8 @@ const DonutChart = () => {
         });
     */
 
-    /*const mockData = {
+    /* Estatico:
+    const mockData = {
         series: [477138, 499928, 444867, 220426, 473088],
         labels: ['Anakin', 'Barry Allen', 'Kal-El', 'Logan', 'Padmé']
     }*/

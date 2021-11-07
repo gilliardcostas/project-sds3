@@ -1,6 +1,56 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import { VendaSucesso } from 'types/venda';
+import { round } from 'utils/format';
+import { BASE_URL } from 'utils/request';
+
+type SeriesData = {
+    name: string;
+    data: number[];
+}
+
+type ChartData = {
+    labels: {
+        categories: string[];
+    };
+    series: SeriesData[];
+}
 
 const BarCharts = () => {
+    
+    const [chartData, setChartData] = useState<ChartData>({
+        labels: {
+            categories: []
+        },
+        series: [
+            {
+            name: "",
+            data: []
+            }
+        ]
+    });
+
+    useEffect(() => {
+        axios.get(`${BASE_URL}/vendas/sucesso-por-vendedor`)
+            .then(response => {
+                const data = response.data as VendaSucesso[];
+                const myLabels = data.map(x => x.nomeVendedor);
+                const mySeries = data.map(x => round(100.0 * x.promocoes / x.visitado, 1));
+
+                setChartData({
+                    labels: {
+                        categories: myLabels
+                    },
+                    series: [
+                        {
+                        name: "% Sucesso",
+                        data: mySeries
+                        }
+                    ]
+                })
+            });
+    }, [])
 
     const options = {
         plotOptions: {
@@ -10,6 +60,7 @@ const BarCharts = () => {
         },
     };
 
+    /*
     const mockData = {
         labels: {
             categories: ['Anakin', 'Barry Allen', 'Kal-El', 'Logan', 'Padmé']
@@ -21,12 +72,13 @@ const BarCharts = () => {
             }
         ]
     };
+    */
 
     return (
 
         <Chart
-            options={{ ...options, xaxis: mockData.labels }}
-            series={mockData.series}
+            options={{ ...options, xaxis: chartData.labels }}
+            series={chartData.series}
             type="bar"
             height="240"
         />
